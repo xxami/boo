@@ -1,0 +1,12 @@
+{
+  "name": "boo",
+  "description": "spooky discord bot",
+  "repository": "https://github.com/xxami/boo.git",
+  "license": "Unlicense",
+  "author": "xxami",
+  "dependencies": {
+    "bufferutil": "^3.0.1",
+    "discord.js": "^11.1.0",
+    "uws": "^0.14.5"
+  }
+}
