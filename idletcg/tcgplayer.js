@@ -2,7 +2,8 @@
 class TcgPlayer {
 
 	constructor(username) {
-
+        this.username = username;
+        this.money = 0;
 	}
 
 }

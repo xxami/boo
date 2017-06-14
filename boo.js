@@ -9,6 +9,7 @@ const game = new idletcg.IdleTcg();
 
 client.on('ready', () => {
 	console.log('I am ready!');
+	game.load();
 	client.user.setGame("PokemonIdle: .help");
 });
 
@@ -25,6 +26,7 @@ client.on('message', message => {
 		}
 		else {
 			game.addPlayer(user.id, user.username);
+			game.save();
 			message.reply('you are now playing PokemonIdle, good luck!');
 		}
 	}
@@ -33,4 +35,3 @@ client.on('message', message => {
 
 dotenv.config({path: 'boo.env'});
 client.login(process.env.BOO_TOKEN);
-
