@@ -1,6 +1,8 @@
 
 const storage = require('node-persist');
 
+const tcgplayer = require('./tcgplayer.js');
+
 class IdleTcg {
 	
 	constructor() {
@@ -20,7 +22,7 @@ class IdleTcg {
     }
 	
 	addPlayer(id, username) {
-		this.players[id] = username;
+        this.players[id] = new tcgplayer.TcgPlayer(username);
 	}
 	
 	hasPlayer(id) {

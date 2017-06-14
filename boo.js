@@ -15,12 +15,16 @@ client.on('ready', () => {
 
 client.on('message', message => {
 	
+	if (message.channel.name != process.env.BOO_CHANNEL) {
+		return;
+	}
+
 	if (message.content === '.help') {
 		message.reply('collect pokemon while you idle, type .join to get started!');
 	}
 	
 	else if (message.content === '.join') {
-		let user = message.client.user;
+		let user = message.author;
 		if (game.hasPlayer(user.id)) {
 			message.reply('you are already a registered player!');
 		}
