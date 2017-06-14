@@ -1,28 +1,11 @@
 
 const dotenv = require('dotenv');
 const discord = require('discord.js');
+
+const idletcg = require('./idletcg/idletcg.js');
+
 const client = new discord.Client();
-
-class Idler {
-	
-	constructor() {
-		this.players = {};
-	}
-	
-	addPlayer(id, username) {
-		this.players[id] = username;
-	}
-	
-	hasPlayer(id) {
-		if (this.players[id] === undefined) {
-			return false;
-		}
-		return true;
-	}
-	
-}
-
-const idler = new Idler();
+const game = new idletcg.IdleTcg();
 
 client.on('ready', () => {
 	console.log('I am ready!');
@@ -32,16 +15,16 @@ client.on('ready', () => {
 client.on('message', message => {
 	
 	if (message.content === '.help') {
-		message.reply('collect pokemon while you idle, type .register to get started!');
+		message.reply('collect pokemon while you idle, type .join to get started!');
 	}
 	
-	else if (message.content === '.register') {
+	else if (message.content === '.join') {
 		let user = message.client.user;
-		if (idler.hasPlayer(user.id)) {
+		if (game.hasPlayer(user.id)) {
 			message.reply('you are already a registered player!');
 		}
 		else {
-			idler.addPlayer(user.id, user.username);
+			game.addPlayer(user.id, user.username);
 			message.reply('you are now playing PokemonIdle, good luck!');
 		}
 	}
