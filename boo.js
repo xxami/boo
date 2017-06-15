@@ -1,41 +1,50 @@
 
 const dotenv = require('dotenv');
 const discord = require('discord.js');
-
 const idletcg = require('./idletcg/idletcg.js');
 
 const client = new discord.Client();
 const game = new idletcg.IdleTcg();
 
+const commandPrefix = '.';
+
 client.on('ready', () => {
 	console.log('I am ready!');
 	game.load();
-	client.user.setGame("PokemonIdle: .help");
+	client.user.setGame("idle tcg: .help");
 });
 
 client.on('message', message => {
-	
-	if (message.channel.name != process.env.BOO_CHANNEL) {
+	if (message.channel.name !== process.env.BOO_CHANNEL ||
+		message.content[0] !== commandPrefix) {
 		return;
 	}
-
-	if (message.content === '.help') {
-		message.reply('collect pokemon while you idle, type .join to get started!');
-	}
+	let command = message.content.substring(1);
 	
-	else if (message.content === '.join') {
-		let user = message.author;
+	if (command in BooCommands) {
+		BooCommands[command](message);
+	}
+});
+
+class BooCommands {
+
+	static help(context) {
+		context.reply('collect pokemon while you idle, type .join to get started!');
+	}
+
+	static join(context) {
+		let user = context.author;
 		if (game.hasPlayer(user.id)) {
-			message.reply('you are already a registered player!');
+			context.reply('you are already a registered player!');
 		}
 		else {
 			game.addPlayer(user.id, user.username);
 			game.save();
-			message.reply('you are now playing PokemonIdle, good luck!');
+			context.reply('you are now playing idle tcg, good luck!');
 		}
 	}
-	
-});
+
+}
 
 dotenv.config({path: 'boo.env'});
 client.login(process.env.BOO_TOKEN);

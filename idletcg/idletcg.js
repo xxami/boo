@@ -9,20 +9,20 @@ class IdleTcg {
 		this.players = {};
 	}
 
-    load() {
-        storage.initSync();
-        let players = storage.getItemSync('players');
-        if (players !== undefined) {
-            this.players = players;
-        }
-    }
+	load() {
+		storage.initSync();
+		let players = storage.getItemSync('players');
+		if (players !== undefined) {
+			this.players = players;
+		}
+	}
 
-    save() {
-        storage.setItemSync('players', this.players);
-    }
+	save() {
+		storage.setItemSync('players', this.players);
+	}
 	
 	addPlayer(id, username) {
-        this.players[id] = new tcgplayer.TcgPlayer(username);
+		this.players[id] = new tcgplayer.TcgPlayer(username);
 	}
 	
 	hasPlayer(id) {
