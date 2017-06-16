@@ -25,6 +25,10 @@ class IdleTcg {
 		this.players[id] = new tcgplayer.TcgPlayer(username);
 	}
 	
+	getPlayer(id) {
+		return this.players[id];
+	}
+
 	hasPlayer(id) {
 		if (this.players[id] === undefined) {
 			return false;

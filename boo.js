@@ -5,13 +5,14 @@ const idletcg = require('./idletcg/idletcg.js');
 
 const client = new discord.Client();
 const game = new idletcg.IdleTcg();
-
 const commandPrefix = '.';
+const scanTime = 10;
 
 client.on('ready', () => {
-	console.log('I am ready!');
 	game.load();
-	client.user.setGame("idle tcg: .help");
+	client.user.setGame("idletcg: .help");
+	console.log('boo: running');
+	setInterval(BooSchedule.updateIdleTcg, scanTime * 1000);
 });
 
 client.on('message', message => {
@@ -20,11 +21,28 @@ client.on('message', message => {
 		return;
 	}
 	let command = message.content.substring(1);
-	
+
 	if (command in BooCommands) {
 		BooCommands[command](message);
 	}
 });
+
+class BooSchedule {
+
+	static updateIdleTcg() {
+		client.users.forEach(function(user, id, _) {
+			if (!game.hasPlayer(id)) return;
+			let player = game.getPlayer(id);
+
+			player.idle += scanTime;
+			player.money += 137;
+			player.username = user.username;
+		});
+
+		game.save();
+	}
+
+}
 
 class BooCommands {
 
@@ -40,7 +58,20 @@ class BooCommands {
 		else {
 			game.addPlayer(user.id, user.username);
 			game.save();
-			context.reply('you are now playing idle tcg, good luck!');
+			context.reply('you are now playing idletcg, good luck!');
+		}
+	}
+
+	static stats(context) {
+		let user = context.author;
+		if (game.hasPlayer(user.id)) {
+			let player = game.getPlayer(user.id);
+			let idle = 'you\'ve idled for ' + player.idle + ' seconds';
+			let money = 'and have ¥' + player.money + ' in your piggy bank';
+			context.reply(idle + ' ' + money + '!');
+		}
+		else {
+			context.reply('sorry; you\'re not a registered player, see .help!');
 		}
 	}
 
