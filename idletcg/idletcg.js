@@ -1,6 +1,5 @@
 
 const storage = require('node-persist');
-
 const tcgplayer = require('./tcgplayer.js');
 
 class IdleTcg {

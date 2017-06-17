@@ -10,5 +10,8 @@
     "dotenv": "^4.0.0",
     "node-persist": "^2.0.11",
     "uws": "^0.14.5"
+  },
+  "scripts": {
+    "preinstall": "node setup.js"
   }
 }
