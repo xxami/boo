@@ -9,12 +9,22 @@ let generationsList = [];
 let pokemonList = {}
 
 let url = bulbapedia + '/wiki/' + pokemonListPage;
-request(url, function(err, response, body) {
+console.log('boo: fetching ' + url);
 
+class PendingDownload {
+
+	constructor(pokemonDirText, pokemon) {
+		this.url = bulbapedia + pokemonDirText;
+		this.pokemon = pokemon;
+	}
+
+}
+
+request(url, function(err, response, body) {
 	console.log('boo: setup running..');
 	
 	// get generations titles
-	$ = cheerio.load(body);
+	let $ = cheerio.load(body);
 	let generations = $('#mw-content-text > h3 > span');
 
 	$(generations).each(function(index, value) {
@@ -25,6 +35,7 @@ request(url, function(err, response, body) {
 	});
 
 	// get list of pokemon within each generation
+	let pendingDownloads = [];
 	let generationIndex = 0;
 	let generationLists = $('#mw-content-text > table[align="center"] > tbody');
 
@@ -46,6 +57,9 @@ request(url, function(err, response, body) {
 			if (type_b.text() !== '')
 				typeText += '/' + type_b.text();
 
+			pendingDownloads.push(new PendingDownload(
+				pokemonDirText, pokemonText));
+
 			console.log(generationText + 
 				' ' + ndexText + 
 				' ' + pokemonText + 
@@ -55,5 +69,30 @@ request(url, function(err, response, body) {
 		generationIndex += 1;
 	});
 
+	console.log('boo: parser complete');
+
+	// write configuration
+
+	// init thumbnail downloads
+	console.log('boo: downloading thumbnails');
+	fetchPokemonThumbnail(pendingDownloads);
 });
 
+function fetchPokemonThumbnail(pendingDownloads) {
+	if (pendingDownloads.length <= 0) {
+		console.log('boo: downloads complete');
+		return;
+	}
+
+	let pendingDownload = pendingDownloads.shift();
+	console.log('boo: fetching ' + pendingDownload.url);
+	request(pendingDownload.url, function(err, response, body) {
+		let $ = cheerio.load(body);
+		let selector = 'img[alt="' + pendingDownload.pokemon + '"]';
+		let img = $(selector);
+		let thumbnailImgUrl = 'https:' + img.attr('src');
+
+		console.log(thumbnailImgUrl);
+		fetchPokemonThumbnail(pendingDownloads);
+	});
+}
