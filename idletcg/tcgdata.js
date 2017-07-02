@@ -17,6 +17,6 @@ const cards = {
 	]
 };
 
-exports.boosters = booster;
+exports.boosters = boosters;
 exports.boosterDescript = boosterDescript;
 exports.cards = cards;

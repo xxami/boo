@@ -50,6 +50,11 @@ class BooCommands {
 		context.reply('collect pokemon while you idle, type .join to get started!');
 	}
 
+	static cards(context) {
+		let cards = game.getCards();
+		context.reply('there are currently ' + cards + ' cards in circulation');
+	}
+
 	static join(context) {
 		let user = context.author;
 		if (game.hasPlayer(user.id)) {

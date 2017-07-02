@@ -1,4 +1,5 @@
 
+const fs = require('fs');
 const request = require('request');
 const cheerio = require('cheerio');
 
@@ -6,7 +7,7 @@ const bulbapedia = 'https://bulbapedia.bulbagarden.net';
 const pokemonListPage = 'List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number';
 
 let generationsList = [];
-let pokemonList = {}
+let pokemonList = {} // generation: [PokemonInfo, ...]
 
 let url = bulbapedia + '/wiki/' + pokemonListPage;
 console.log('boo: fetching ' + url);
@@ -16,6 +17,16 @@ class PendingDownload {
 	constructor(pokemonDirText, pokemon) {
 		this.url = bulbapedia + pokemonDirText;
 		this.pokemon = pokemon;
+	}
+
+}
+
+class PokemonInfo {
+
+	constructor(index, pokemon, type) {
+		this.index = index;
+		this.pokemon = pokemon;
+		this.type = type;
 	}
 
 }
@@ -32,6 +43,7 @@ request(url, function(err, response, body) {
 			.replace('_', ' ');
 
 		generationsList.push(generation);
+		pokemonList[generation] = [];
 	});
 
 	// get list of pokemon within each generation
@@ -60,11 +72,9 @@ request(url, function(err, response, body) {
 			pendingDownloads.push(new PendingDownload(
 				pokemonDirText, pokemonText));
 
-			console.log(generationText + 
-				' ' + ndexText + 
-				' ' + pokemonText + 
-				' (' + pokemonDirText + 
-				') ' + typeText);
+			let pokemonInfo = new PokemonInfo(
+				ndexText, pokemonText, typeText);
+			pokemonList[generationText].push(pokemonInfo);
 		});
 		generationIndex += 1;
 	});

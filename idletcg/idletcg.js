@@ -1,11 +1,13 @@
 
 const storage = require('node-persist');
 const tcgplayer = require('./tcgplayer.js');
+const tcgdata = require('./tcgdata.js');
 
 class IdleTcg {
 	
 	constructor() {
 		this.players = {};
+		this.cards = 0;
 	}
 
 	load() {
@@ -14,6 +16,10 @@ class IdleTcg {
 		if (players !== undefined) {
 			this.players = players;
 		}
+
+		Object.keys(tcgdata.cards).forEach(key => {
+			this.cards += tcgdata.cards[key].length;
+		});
 	}
 
 	save() {
@@ -33,6 +39,10 @@ class IdleTcg {
 			return false;
 		}
 		return true;
+	}
+
+	getCards() {
+		return this.cards;
 	}
 	
 }
