@@ -2,6 +2,7 @@
 const dotenv = require('dotenv');
 const discord = require('discord.js');
 const idletcg = require('./idletcg/idletcg.js');
+const random = require('./lib/random.js');
 
 const client = new discord.Client();
 const game = new idletcg.IdleTcg();
@@ -34,8 +35,11 @@ class BooSchedule {
 			if (!game.hasPlayer(id)) return;
 			let player = game.getPlayer(id);
 
+			let money = random.randInt(0, 137);
+			console.log(money);
+
 			player.idle += scanTime;
-			player.money += 137;
+			player.money += money;
 			player.username = user.username;
 		});
 
