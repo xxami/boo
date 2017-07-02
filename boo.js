@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const discord = require('discord.js');
 const idletcg = require('./idletcg/idletcg.js');
 const random = require('./lib/random.js');
+const config = require('./config.js').BooConfig;
 
 const client = new discord.Client();
 const game = new idletcg.IdleTcg();
@@ -17,7 +18,7 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-	if (message.channel.name !== process.env.BOO_CHANNEL ||
+	if (message.channel.name !== config.channel ||
 		message.content[0] !== commandPrefix) {
 		return;
 	}
@@ -35,11 +36,8 @@ class BooSchedule {
 			if (!game.hasPlayer(id)) return;
 			let player = game.getPlayer(id);
 
-			let money = random.randInt(0, 137);
-			console.log(money);
-
 			player.idle += scanTime;
-			player.money += money;
+			player.money += random.randInt(0, 137);
 			player.username = user.username;
 		});
 
