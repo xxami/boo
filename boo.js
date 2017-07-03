@@ -50,6 +50,16 @@ class BooSchedule {
 				player.idlePoints += random.randInt(idlePointsMin, idlePointsMax);
 			}
 
+			let idleBoosterCost = config.costs.booster.idlePoints;
+			if (player.booster === false && player.idlePoints >= idleBoosterCost) {
+				let boosterDropRate = config.dropRates.booster.rateAsPercentage;
+				if (random.randInt(1, 100) <= boosterDropRate) {
+					player.idlePoints -= idleBoosterCost;
+					player.booster = true;
+					console.log('player received a booster');
+				}
+			}
+
 			player.idle += scanTime;
 			player.username = user.username;
 
