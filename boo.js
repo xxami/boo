@@ -7,8 +7,8 @@ const config = require('./config.js').BooConfig;
 
 const client = new discord.Client();
 const game = new idletcg.IdleTcg();
-const commandPrefix = '.';
-const scanTime = 10;
+const commandPrefix = config.commandPrefix;
+const scanTime = config.scanTime;
 
 client.on('ready', () => {
 	game.load();
@@ -35,10 +35,31 @@ class BooSchedule {
 		client.users.forEach(function(user, id, _) {
 			if (!game.hasPlayer(id)) return;
 			let player = game.getPlayer(id);
+			
+			let moneyDropRate = config.dropRates.money.rateAsPercentage;
+			if (random.randInt(1, 100) <= moneyDropRate) {
+				let moneyMin = config.dropRates.money.minimumValue;
+				let moneyMax = config.dropRates.money.maximumValue;
+				player.money += random.randInt(moneyMin, moneyMax)
+			}
+
+			let idlePointsDropRate = config.dropRates.idlePoints.rateAsPercentage;
+			if (random.randInt(1,100) <= idlePointsDropRate) {
+				let idlePointsMin = config.dropRates.idlePoints.minimumValue;
+				let idlePointsMax = config.dropRates.idlePoints.maximumValue;
+				player.idlePoints += random.randInt(idlePointsMin, idlePointsMax);
+			}
 
 			player.idle += scanTime;
-			player.money += random.randInt(0, 137);
 			player.username = user.username;
+
+			console.log(' --- ');
+			console.log('username: ' + player.username);
+			console.log('idleTime: ' + player.idle);
+			console.log('money: ' + player.money);
+			console.log('idlePoints: ' + player.idlePoints);
+			console.log(' --- ')
+			console.log(' ');
 		});
 
 		game.save();

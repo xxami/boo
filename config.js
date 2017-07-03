@@ -1,6 +1,7 @@
 
 BooConfig = {
 	channel: 'bot',
+	commandPrefix: '.',
 	scanTime: 10,
 
 	dropRates: {
