@@ -2,6 +2,7 @@
 const dotenv = require('dotenv');
 const discord = require('discord.js');
 const idletcg = require('./idletcg/idletcg.js');
+const tcgplayeractor = require('./idletcg/tcgplayeractor.js');
 const random = require('./lib/random.js');
 const config = require('./config.js').BooConfig;
 
@@ -35,29 +36,14 @@ class BooSchedule {
 		client.users.forEach(function(user, id, _) {
 			if (!game.hasPlayer(id)) return;
 			let player = game.getPlayer(id);
+			let playerActor = new tcgplayeractor.TcgPlayerActor(player);
 			
-			let moneyDropRate = config.dropRates.money.rateAsPercentage;
-			if (random.randInt(1, 100) <= moneyDropRate) {
-				let moneyMin = config.dropRates.money.minimumValue;
-				let moneyMax = config.dropRates.money.maximumValue;
-				player.money += random.randInt(moneyMin, moneyMax)
-			}
+			playerActor.rewardMoney();
+			playerActor.rewardIdlePoints();
 
-			let idlePointsDropRate = config.dropRates.idlePoints.rateAsPercentage;
-			if (random.randInt(1,100) <= idlePointsDropRate) {
-				let idlePointsMin = config.dropRates.idlePoints.minimumValue;
-				let idlePointsMax = config.dropRates.idlePoints.maximumValue;
-				player.idlePoints += random.randInt(idlePointsMin, idlePointsMax);
-			}
-
-			let idleBoosterCost = config.costs.booster.idlePoints;
-			if (player.booster === false && player.idlePoints >= idleBoosterCost) {
-				let boosterDropRate = config.dropRates.booster.rateAsPercentage;
-				if (random.randInt(1, 100) <= boosterDropRate) {
-					player.idlePoints -= idleBoosterCost;
-					player.booster = true;
-					console.log('player received a booster');
-				}
+			let boosterEarned = playerActor.rewardBooster();
+			if (boosterEarned) {
+				console.log('player earned a booster');
 			}
 
 			player.idle += scanTime;
