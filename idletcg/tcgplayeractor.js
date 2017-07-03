@@ -1,6 +1,7 @@
 
 const random = require('../lib/random.js');
 const config = require('../config.js').BooConfig;
+const tcgdata = require('./tcgdata.js');
 
 class TcgPlayerActor {
 
@@ -18,6 +19,9 @@ class TcgPlayerActor {
 	}
 
 	rewardIdlePoints() {
+		// prevent idle points increasing while boosters not unpacked
+		if (this.player.booster !== false) return;
+
 		let idlePointsDropRate = config.dropRates.idlePoints.rateAsPercentage;
 		if (random.randInt(1,100) <= idlePointsDropRate) {
 			let idlePointsMin = config.dropRates.idlePoints.minimumValue;
@@ -29,15 +33,12 @@ class TcgPlayerActor {
 	rewardBooster() {
 		let idleBoosterCost = config.costs.booster.idlePoints;
 		if (this.player.booster === false && this.player.idlePoints >= idleBoosterCost) {
-			console.log('booster == false');
 			let boosterDropRate = config.dropRates.booster.rateAsPercentage;
 			if (random.randInt(1, 100) <= boosterDropRate) {
-				console.log('yes');
-				this.player.idlePoints -= idleBoosterCost;
-				this.player.booster = true;
+				this.player.idlePoints = 0;
+				this.player.booster = random.randInt(0, tcgdata.boosters.length -1);
 				return true;
 			}
-			console.log('no');
 		}
 		return false;
 	}

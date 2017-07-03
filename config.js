@@ -19,7 +19,7 @@ BooConfig = {
 		},
 
 		booster: {
-			rateAsPercentage: 20
+			rateAsPercentage: 40
 		}
 
 	},

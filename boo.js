@@ -2,6 +2,7 @@
 const dotenv = require('dotenv');
 const discord = require('discord.js');
 const idletcg = require('./idletcg/idletcg.js');
+const tcgdata = require('./idletcg/tcgdata.js');
 const tcgplayeractor = require('./idletcg/tcgplayeractor.js');
 const random = require('./lib/random.js');
 const config = require('./config.js').BooConfig;
@@ -43,7 +44,13 @@ class BooSchedule {
 
 			let boosterEarned = playerActor.rewardBooster();
 			if (boosterEarned) {
-				console.log('player earned a booster');
+				let idleStr = user + ' has idled for ';
+				let idleTime = player.idle + ' seconds, and found a ';
+				let desc = tcgdata.boosters[player.booster] + ' ' + tcgdata.boosterDescript;
+				let help = '; ' + config.commandPrefix + 'unpack to open';
+
+				let channel = client.channels.find('name', config.channel);
+				channel.send(idleStr + idleTime + desc + help);
 			}
 
 			player.idle += scanTime;
