@@ -93,6 +93,25 @@ class BooCommands {
 		}
 	}
 
+	static unpack(context) {
+		let user = context.author;
+		if (game.hasPlayer(user.id)) {
+			let player = game.getPlayer(user.id);
+			if (player.booster !== false) {
+				let playerActor =  new tcgplayeractor.TcgPlayerActor(player);
+				let card = playerActor.openBooster();
+				console.log(card);
+				context.reply('you received #' + card.id + ' - ' + card.text);
+			}
+			else {
+				context.reply('sorry; you don\'t have anything to unpack!');
+			}
+		}
+		else {
+			context.reply('sorry; you\'re not a registered player, see .help!');
+		}
+	}
+
 	static stats(context) {
 		let user = context.author;
 		if (game.hasPlayer(user.id)) {

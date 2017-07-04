@@ -43,6 +43,15 @@ class TcgPlayerActor {
 		return false;
 	}
 
+	openBooster() {
+		let booster = tcgdata.boosters[this.player.booster];
+		let cards = tcgdata.cards[booster];
+		let card = cards[random.randInt(0, cards.length -1)];
+		this.player.cards[card.id] = 1;
+		this.player.booster = false;
+		return card;
+	}
+
 }
 
 exports.TcgPlayerActor = TcgPlayerActor;

@@ -4,7 +4,7 @@ const boosters = [
 	'February'
 ];
 
-const boosterDescript = 'Booster Pack';
+const boosterDescript = 'booster box';
 
 const cards = {
 	'January': [
