@@ -119,6 +119,14 @@ class BooCommands {
 			let idle = 'you\'ve idled for ' + player.idle + ' seconds';
 			let money = 'and have ¥' + player.money + ' in your piggy bank';
 			context.reply(idle + ' ' + money + '!');
+
+			let cards = Object.keys(player.cards).length;
+			let collected = 'you have collected ' + cards + '/' + game.cards;
+			let boosters = '!';
+			if (player.booster !== false) {
+				boosters = ', and have one sealed ' + tcgdata.boosterDescript;
+			}
+			context.reply(collected + ' trading cards' + boosters);
 		}
 		else {
 			context.reply('sorry; you\'re not a registered player, see .help!');
