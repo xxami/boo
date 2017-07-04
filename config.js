@@ -1,6 +1,7 @@
 
 BooConfig = {
 	channel: 'bot',
+	embedThumbnail: 'https://cdn.discordapp.com/embed/avatars/0.png',
 	commandPrefix: '.',
 	scanTime: 10,
 

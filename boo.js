@@ -95,21 +95,38 @@ class BooCommands {
 
 	static unpack(context) {
 		let user = context.author;
-		if (game.hasPlayer(user.id)) {
-			let player = game.getPlayer(user.id);
-			if (player.booster !== false) {
-				let playerActor =  new tcgplayeractor.TcgPlayerActor(player);
-				let card = playerActor.openBooster();
-				console.log(card);
-				context.reply('you received #' + card.id + ' - ' + card.text);
-			}
-			else {
-				context.reply('sorry; you don\'t have anything to unpack!');
-			}
-		}
-		else {
+		if (!game.hasPlayer(user.id)) {
 			context.reply('sorry; you\'re not a registered player, see .help!');
+			return;
 		}
+
+		let player = game.getPlayer(user.id);
+		if (player.booster === false) {
+			context.reply('sorry; you don\'t have anything to unpack!');
+			return;
+		}
+
+		let boosterName = tcgdata.boosters[player.booster];
+		let playerActor =  new tcgplayeractor.TcgPlayerActor(player);
+		let card = playerActor.openBooster();
+		let colour = '0xFF0033';
+		let pronoun = 'their';
+		let boosterDescript = tcgdata.boosterDescript.charAt(0).toUpperCase() +
+			tcgdata.boosterDescript.slice(1);
+
+		let embed = new discord.RichEmbed()
+			.setAuthor(boosterDescript + ': ' + boosterName)
+			.setColor(colour)
+			.setDescription(user + ' opened ' + pronoun + 
+				' ' + tcgdata.boosterDescript +
+				' and received card ' + card.id +
+				'/' + game.cards + '!')
+			.addField('#' + card.id + ': ' + card.text, card.description)
+			.setThumbnail(config.embedThumbnail)
+			.attachFile(card.img);
+
+		let channel = client.channels.find('name', config.channel);
+		channel.send({embed});
 	}
 
 	static stats(context) {
