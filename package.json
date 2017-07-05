@@ -14,6 +14,6 @@
     "uws": "^0.14.5"
   },
   "scripts": {
-    "preinstall": "node setup.js"
+    "setup:pokemon": "node setup.js"
   }
 }
