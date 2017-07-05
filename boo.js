@@ -114,7 +114,7 @@ class BooCommands {
 			player.title = tcgdata.titles[cards];
 		}
 		
-		let colour = '0xFF0033';
+		let colour = config.embedColour;
 		if (player['colour'] !== undefined) {
 			colour = player['colour'];
 		}
@@ -131,8 +131,8 @@ class BooCommands {
 
 		let avatarURL = config.embedThumbnail;
 		if (config.useAvatarsInDropAlerts === true) {
-			if (player.avatarURL !== null) {
-				avatarURL = player.avatarURL;
+			if (user.avatarURL !== null) {
+				avatarURL = user.avatarURL;
 			}
 		}
 
@@ -144,17 +144,17 @@ class BooCommands {
 			.setColor(colour)
 			.setDescription(user + ' opened ' + pronoun + 
 				' ' + tcgdata.boosterDescript +
-				' and received card ' + card.id +
-				'/' + game.cards + '!')
+				' and received card `' + card.id +
+				'/' + game.cards + '`')
 			.addField('#' + card.id + ': ' + card.text, card.description)
-			.setThumbnail(user.avatarURL)
+			.setThumbnail(avatarURL)
 			.attachFile(card.img);
 
 		let channel = client.channels.find('name', config.channel);
 		channel.send({embed});
 	}
 
-	static stats(context) {
+	static profile(context) {
 		let user = context.author;
 		if (!game.hasPlayer(user.id)) {
 			context.reply('sorry; you\'re not a registered player, see .help!');
@@ -162,17 +162,51 @@ class BooCommands {
 		}
 
 		let player = game.getPlayer(user.id);
-		let idle = 'you\'ve idled for ' + player.idle + ' seconds';
-		let money = 'and have ¥' + player.money + ' in your piggy bank';
-		context.reply(idle + ' ' + money + '!');
+
+		let colour = config.embedColour;
+		if (player['colour'] !== undefined) {
+			colour = player['colour'];
+		}
+
+		let pronoun = 'their';
+		if (player['gender'] !== undefined) {
+			if (player['gender'] === 'm') {
+				pronoun = 'his';
+			}
+			else {
+				pronoun = 'her';
+			}
+		}
+
+		let avatarURL = config.embedThumbnail;
+		if (config.useAvatarsInDropAlerts === true) {
+			console.log('this is true');
+			if (user.avatarURL !== null) {
+				console.log('so is this..');
+				avatarURL = user.avatarURL;
+			}
+		}
 
 		let cards = Object.keys(player.cards).length;
-		let collected = 'you have collected ' + cards + '/' + game.cards;
-		let boosters = '!';
+		let completion = Math.round(((cards * 100) / game.cards) * 10) / 10;
+
+		let embed = new discord.RichEmbed()
+			.setAuthor(user.username)
+			.setColor(colour)
+			.setDescription('`' + player.title + '`')
+			.addField('Cards', '🗃️ ' + cards + '/' + game.cards +
+				' cards found `' + completion + '% complete`')
+			.addField('Idle time', '⏰ ' + player.idle + ' seconds')
+			.addField('Piggy bank', '💴 ¥' + player.money)
+			.setThumbnail(avatarURL);
+
 		if (player.booster !== false) {
-			boosters = ', and have one sealed ' + tcgdata.boosterDescript;
+			embed.setFooter(user.username + ' hasn\'t opened ' + pronoun + 
+				' last ' + tcgdata.boosterDescript)
 		}
-		context.reply(collected + ' trading cards' + boosters);
+
+		let channel = client.channels.find('name', config.channel);
+		channel.send({embed});
 	}
 
 }

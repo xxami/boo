@@ -26,3 +26,4 @@ const titles = {
 exports.boosters = boosters;
 exports.boosterDescript = boosterDescript;
 exports.cards = cards;
+exports.titles = titles;
