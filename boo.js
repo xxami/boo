@@ -109,8 +109,29 @@ class BooCommands {
 		let boosterName = tcgdata.boosters[player.booster];
 		let playerActor =  new tcgplayeractor.TcgPlayerActor(player);
 		let card = playerActor.openBooster();
+		
 		let colour = '0xFF0033';
+		if (player['colour'] !== undefined) {
+			colour = player['colour'];
+		}
+
 		let pronoun = 'their';
+		if (player['gender'] !== undefined) {
+			if (player['gender'] === 'm') {
+				pronoun = 'his';
+			}
+			else {
+				pronoun = 'her';
+			}
+		}
+
+		let avatarURL = config.embedThumbnail;
+		if (config.useAvatarsInDropAlerts === true) {
+			if (player.avatarURL !== null) {
+				avatarURL = player.avatarURL;
+			}
+		}
+		
 		let boosterDescript = tcgdata.boosterDescript.charAt(0).toUpperCase() +
 			tcgdata.boosterDescript.slice(1);
 
@@ -122,7 +143,7 @@ class BooCommands {
 				' and received card ' + card.id +
 				'/' + game.cards + '!')
 			.addField('#' + card.id + ': ' + card.text, card.description)
-			.setThumbnail(config.embedThumbnail)
+			.setThumbnail(user.avatarURL)
 			.attachFile(card.img);
 
 		let channel = client.channels.find('name', config.channel);
