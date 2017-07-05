@@ -5,6 +5,7 @@ BooConfig = {
 	embedColour: '0xFF0033',
 	useAvatarsInDropAlerts: true,
 	commandPrefix: '.',
+	messagePrefix: '🔊  ',
 	scanTime: 10,
 
 	dropRates: {

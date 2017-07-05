@@ -50,7 +50,7 @@ class BooSchedule {
 				let help = '; ' + config.commandPrefix + 'unpack to open';
 
 				let channel = client.channels.find('name', config.channel);
-				channel.send(idleStr + idleTime + desc + help);
+				channel.send(config.messagePrefix + idleStr + idleTime + desc + help);
 			}
 
 			player.idle += scanTime;
@@ -73,23 +73,31 @@ class BooSchedule {
 class BooCommands {
 
 	static help(context) {
-		context.reply('collect pokemon while you idle, type .join to get started!');
-	}
+		let embed = new discord.RichEmbed()
+			.setAuthor('About boo')
+			.setColor(config.embedColour)
+			.setDescription('Boo is an idlerpg style trading card game. ' +
+				'Stay connected and earn cards, try to collect them all!')
+			.addField('Cards', '🗃️ There are currently ' + game.cards +
+				' cards in circulation')
+			.addField('Commands', '```css\n.join\n.unpack\n.profile```')
+			.addField('Source code', '🦄 https://github.com/xxami/boo')
+			.setFooter('Created by『ｌｉｌａｈ』🎀')
+			.setThumbnail(config.embedThumbnail);
 
-	static cards(context) {
-		let cards = game.getCards();
-		context.reply('there are currently ' + cards + ' cards in circulation');
+		let channel = client.channels.find('name', config.channel);
+		channel.send({embed});
 	}
 
 	static join(context) {
 		let user = context.author;
 		if (game.hasPlayer(user.id)) {
-			context.reply('you are already a registered player!');
+			context.reply('you\'re already a registered player');
 		}
 		else {
 			game.addPlayer(user.id, user.username);
 			game.save();
-			context.reply('you are now playing idletcg, good luck!');
+			context.reply('you\'ve been added to the game; good luck!');
 		}
 	}
 
