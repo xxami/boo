@@ -14,6 +14,7 @@ Join the game, maintain a connection, receive trading cards for your time, colle
 ```
 npm install
 # <set discord bot token in boo.env>
+# <configure config.js>
 node boo.js
 ```
 

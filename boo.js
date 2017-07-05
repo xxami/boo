@@ -109,6 +109,10 @@ class BooCommands {
 		let boosterName = tcgdata.boosters[player.booster];
 		let playerActor =  new tcgplayeractor.TcgPlayerActor(player);
 		let card = playerActor.openBooster();
+		let cards =  Object.keys(player.cards).length;
+		if (tcgdata.titles[cards] !== undefined) {
+			player.title = tcgdata.titles[cards];
+		}
 		
 		let colour = '0xFF0033';
 		if (player['colour'] !== undefined) {
@@ -131,7 +135,7 @@ class BooCommands {
 				avatarURL = player.avatarURL;
 			}
 		}
-		
+
 		let boosterDescript = tcgdata.boosterDescript.charAt(0).toUpperCase() +
 			tcgdata.boosterDescript.slice(1);
 
@@ -152,23 +156,23 @@ class BooCommands {
 
 	static stats(context) {
 		let user = context.author;
-		if (game.hasPlayer(user.id)) {
-			let player = game.getPlayer(user.id);
-			let idle = 'you\'ve idled for ' + player.idle + ' seconds';
-			let money = 'and have ¥' + player.money + ' in your piggy bank';
-			context.reply(idle + ' ' + money + '!');
-
-			let cards = Object.keys(player.cards).length;
-			let collected = 'you have collected ' + cards + '/' + game.cards;
-			let boosters = '!';
-			if (player.booster !== false) {
-				boosters = ', and have one sealed ' + tcgdata.boosterDescript;
-			}
-			context.reply(collected + ' trading cards' + boosters);
-		}
-		else {
+		if (!game.hasPlayer(user.id)) {
 			context.reply('sorry; you\'re not a registered player, see .help!');
+			return;
 		}
+
+		let player = game.getPlayer(user.id);
+		let idle = 'you\'ve idled for ' + player.idle + ' seconds';
+		let money = 'and have ¥' + player.money + ' in your piggy bank';
+		context.reply(idle + ' ' + money + '!');
+
+		let cards = Object.keys(player.cards).length;
+		let collected = 'you have collected ' + cards + '/' + game.cards;
+		let boosters = '!';
+		if (player.booster !== false) {
+			boosters = ', and have one sealed ' + tcgdata.boosterDescript;
+		}
+		context.reply(collected + ' trading cards' + boosters);
 	}
 
 }

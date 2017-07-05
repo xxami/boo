@@ -17,6 +17,12 @@ const cards = {
 	]
 };
 
+const titles = {
+	0: 'Newbie',
+	1: 'Potato',
+	4: 'Neko'
+}
+
 exports.boosters = boosters;
 exports.boosterDescript = boosterDescript;
 exports.cards = cards;

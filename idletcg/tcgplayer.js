@@ -1,4 +1,6 @@
 
+const tcgdata = require('./tcgdata.js');
+
 class TcgPlayer {
 
 	constructor(username) {
@@ -8,6 +10,7 @@ class TcgPlayer {
 		this.money = 0;
 		this.cards = {};
 		this.booster = false;
+		this.title = tcgdata.titles[0];
 	}
 
 }
