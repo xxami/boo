@@ -48,8 +48,8 @@ class BooSchedule {
 
 			let boosterEarned = playerActor.rewardBooster();
 			if (boosterEarned) {
-				let idleStr = user + ' has idled for `';
-				let idleTime = time.secondsToHumanTime(player.idle) + '` and found `';
+				let idleStr = user + ' idled for ';
+				let idleTime = time.secondsToHumanTime(player.idle) + ' and found item `';
 				let desc = boosterDescript + ': ' + tcgdata.boosters[player.booster] + '`';
 				let help = ' ' + config.commandPrefix + 'unpack to open';
 
