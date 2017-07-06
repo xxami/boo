@@ -1,4 +1,6 @@
 
+// this is probably broken by the time you need to use it
+
 const fs = require('fs');
 const request = require('request');
 const cheerio = require('cheerio');
@@ -14,7 +16,8 @@ console.log('boo: fetching ' + url);
 
 class PendingDownload {
 
-	constructor(pokemonDirText, pokemon) {
+	constructor(pokemonDirText, pokemon, index) {
+		this.index = index;
 		this.url = bulbapedia + pokemonDirText;
 		this.pokemon = pokemon;
 	}
@@ -32,7 +35,7 @@ class PokemonInfo {
 }
 
 request(url, function(err, response, body) {
-	console.log('boo: setup running..');
+	console.log('boo: extracting pokemon');
 	
 	// get generations titles
 	let $ = cheerio.load(body);
@@ -70,7 +73,7 @@ request(url, function(err, response, body) {
 				typeText += '/' + type_b.text();
 
 			pendingDownloads.push(new PendingDownload(
-				pokemonDirText, pokemonText));
+				pokemonDirText, pokemonText, ndexText.substring(1)));
 
 			let pokemonInfo = new PokemonInfo(
 				ndexText, pokemonText, typeText);
@@ -79,9 +82,52 @@ request(url, function(err, response, body) {
 		generationIndex += 1;
 	});
 
-	console.log('boo: parser complete');
+	console.log('boo: finished parsing');
 
 	// write configuration
+	console.log('boo: writing dataset');
+	
+	let dataset = '\n';
+	dataset += 'const boosters = [\n'
+	generationsList.forEach(function(generation) {
+		dataset += '	\'' + generation + '\',\n';
+	});
+	dataset += '];\n\n';
+	dataset += 'const boosterDescript = \'booster box\';\n\n';
+	dataset += 'const cards = {\n';
+	generationsList.forEach(function(generation) {
+		dataset += '	\'' + generation + '\': [\n';
+		pokemonList[generation].forEach(function(pokemonInfo) {
+			dataset += '		{\'img\': \'res/';
+			dataset += pokemonInfo.index.substring(1) + '.png\', \'id\': ';
+			dataset += pokemonInfo.index.substring(1) + ', \'text\': "';
+			dataset += pokemonInfo.pokemon + '", \'description\': "';
+			dataset += 'A `' + pokemonInfo.type + '` type Pokémon"},\n';
+		});
+		dataset += '	],\n';
+	});
+	dataset += '};\n\n';
+	dataset += 'const titles = {\n';
+	dataset += '	0: \'Newbie Trainer\',\n';
+	dataset += '	100: \'Beginner Trainer\',\n';
+	dataset += '	200: \'Intermediate Trainer\',\n';
+	dataset += '	300: \'Experienced Trainer\',\n';
+	dataset += '	400: \'Advanced Trainer\',\n';
+	dataset += '	500: \'Expert Trainer\',\n';
+	dataset += '	600: \'Elite Trainer\',\n';
+	dataset += '	700: \'Pokémon Master\',\n';
+	dataset += '	802: \'Pokémon Master+\',\n';
+	dataset += '};\n\n';
+	dataset += 'exports.boosters = boosters;\n';
+	dataset += 'exports.boosterDescript = boosterDescript;\n';
+	dataset += 'exports.cards = cards;\n';
+	dataset += 'exports.titles = titles;\n';
+	
+	fs.writeFile('./idletcg/tcgdata.js', dataset, function (err) {
+		if (err) { return console.log(err); }
+		
+		console.log('boo: dataset written');
+	});
 
 	// init thumbnail downloads
 	console.log('boo: downloading thumbnails');
@@ -95,14 +141,26 @@ function fetchPokemonThumbnail(pendingDownloads) {
 	}
 
 	let pendingDownload = pendingDownloads.shift();
+	
+	let localFile = 'res/' + pendingDownload.index + '.png';
+	if (fs.existsSync(localFile)) {
+		console.log('skipping ' + localFile);
+		fetchPokemonThumbnail(pendingDownloads);
+		return;
+	}
+	
 	console.log('boo: fetching ' + pendingDownload.url);
 	request(pendingDownload.url, function(err, response, body) {
 		let $ = cheerio.load(body);
 		let selector = 'img[alt="' + pendingDownload.pokemon + '"]';
 		let img = $(selector);
+		if (img.attr('src') == undefined) {
+			img = $($('img[width="250"]')[0]);
+			console.log(img.attr('src'));
+		}
 		let thumbnailImgUrl = 'https:' + img.attr('src');
-
-		console.log(thumbnailImgUrl);
+		console.log('downloading thumbnail to ' + localFile);
+		request(thumbnailImgUrl).pipe(fs.createWriteStream(localFile));
 		fetchPokemonThumbnail(pendingDownloads);
 	});
 }
