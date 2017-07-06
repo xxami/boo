@@ -5,6 +5,7 @@ const idletcg = require('./idletcg/idletcg.js');
 const tcgdata = require('./idletcg/tcgdata.js');
 const tcgplayeractor = require('./idletcg/tcgplayeractor.js');
 const random = require('./lib/random.js');
+const time = require('./lib/time.js');
 const config = require('./config.js').BooConfig;
 
 const client = new discord.Client();
@@ -42,12 +43,15 @@ class BooSchedule {
 			playerActor.rewardMoney();
 			playerActor.rewardIdlePoints();
 
+			let boosterDescript = tcgdata.boosterDescript.charAt(0).toUpperCase() +
+				tcgdata.boosterDescript.slice(1);
+
 			let boosterEarned = playerActor.rewardBooster();
 			if (boosterEarned) {
-				let idleStr = user + ' has idled for ';
-				let idleTime = player.idle + ' seconds, and found a ';
-				let desc = tcgdata.boosters[player.booster] + ' ' + tcgdata.boosterDescript;
-				let help = '; ' + config.commandPrefix + 'unpack to open';
+				let idleStr = user + ' has idled for `';
+				let idleTime = time.secondsToHumanTime(player.idle) + '` and found `';
+				let desc = boosterDescript + ': ' + tcgdata.boosters[player.booster] + '`';
+				let help = ' ' + config.commandPrefix + 'unpack to open';
 
 				let channel = client.channels.find('name', config.channel);
 				channel.send(config.messagePrefix + idleStr + idleTime + desc + help);
@@ -204,7 +208,7 @@ class BooCommands {
 			.setDescription('`' + player.title + '`')
 			.addField('Cards', '🗃️ ' + cards + '/' + game.cards +
 				' cards found `' + completion + '% complete`')
-			.addField('Idle time', '⏰ ' + player.idle + ' seconds')
+			.addField('Idle time', '⏰ ' + time.secondsToHumanTime(player.idle))
 			.addField('Piggy bank', '💴 ¥' + player.money)
 			.setThumbnail(avatarURL);
 
