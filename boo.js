@@ -59,14 +59,6 @@ class BooSchedule {
 
 			player.idle += scanTime;
 			player.username = user.username;
-
-			console.log(' --- ');
-			console.log('username: ' + player.username);
-			console.log('idleTime: ' + player.idle);
-			console.log('money: ' + player.money);
-			console.log('idlePoints: ' + player.idlePoints);
-			console.log(' --- ')
-			console.log(' ');
 		});
 
 		game.save();
@@ -192,9 +184,7 @@ class BooCommands {
 
 		let avatarURL = config.embedThumbnail;
 		if (config.useAvatarsInDropAlerts === true) {
-			console.log('this is true');
 			if (user.avatarURL !== null) {
-				console.log('so is this..');
 				avatarURL = user.avatarURL;
 			}
 		}
