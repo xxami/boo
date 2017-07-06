@@ -77,7 +77,7 @@ request(url, function(err, response, body) {
 
 			let pokemonInfo = new PokemonInfo(
 				ndexText, pokemonText, typeText);
-			pokemonList[generationText].push(pokemonInfo);
+			pokemonList[generationText][Number(ndexText.substring(1))] = pokemonInfo;
 		});
 		generationIndex += 1;
 	});
