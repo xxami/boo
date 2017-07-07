@@ -1,6 +1,7 @@
 
 BooConfig = {
 	channel: 'bot',
+	cardData: './idletcg/tcgdata.js',
 	embedThumbnail: 'https://cdn.discordapp.com/embed/avatars/0.png',
 	embedColour: '0xFF0033',
 	useAvatarsInDropAlerts: true,
