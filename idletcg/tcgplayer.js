@@ -1,5 +1,6 @@
 
-const tcgdata = require('./tcgdata.js');
+const config = require('../config.js').BooConfig;
+const tcgdata = require('./' + config.cardData);
 
 class TcgPlayer {
 

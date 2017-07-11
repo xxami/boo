@@ -2,11 +2,11 @@
 const dotenv = require('dotenv');
 const discord = require('discord.js');
 const idletcg = require('./idletcg/idletcg.js');
-const tcgdata = require('./idletcg/tcgdata.js');
+const config = require('./config.js').BooConfig;
+const tcgdata = require('./idletcg/' + config.cardData);
 const tcgplayeractor = require('./idletcg/tcgplayeractor.js');
 const random = require('./lib/random.js');
 const time = require('./lib/time.js');
-const config = require('./config.js').BooConfig;
 
 const client = new discord.Client();
 const game = new idletcg.IdleTcg();

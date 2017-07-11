@@ -1,7 +1,7 @@
 
 const random = require('../lib/random.js');
 const config = require('../config.js').BooConfig;
-const tcgdata = require('./tcgdata.js');
+const tcgdata = require('./' + config.cardData);
 
 class TcgPlayerActor {
 

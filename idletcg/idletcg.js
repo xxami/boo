@@ -1,7 +1,8 @@
 
 const storage = require('node-persist');
+const config = require('../config.js').BooConfig;
+const tcgdata = require('./' + config.cardData);
 const tcgplayer = require('./tcgplayer.js');
-const tcgdata = require('./tcgdata.js');
 
 class IdleTcg {
 	
