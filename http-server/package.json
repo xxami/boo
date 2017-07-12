@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "author": "lilah",
   "scripts": {
-    "server": "node booweb.js",
+    "server": "node boo.js",
     "test": "./node_modules/.bin/mocha --harmony --reporter spec --require should *test.js"
   },
   "dependencies": {
