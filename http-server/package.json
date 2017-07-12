@@ -1,0 +1,26 @@
+{
+  "name": "booweb",
+  "version": "1.0.0",
+  "private": true,
+  "description": "spooky discord bot web server",
+  "repository": "https://github.com/xxami/boo.git",
+  "license": "UNLICENSED",
+  "author": "lilah",
+  "scripts": {
+    "server": "node booweb.js",
+    "test": "./node_modules/.bin/mocha --harmony --reporter spec --require should *test.js"
+  },
+  "dependencies": {
+    "koa": "^2.3.0",
+    "koa-body": "^2.1.0",
+    "koa-logger": "^3.0.0",
+    "koa-router": "^7.2.1",
+    "koa-static": "^3.0.0",
+    "koa-views": "^6.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2",
+    "should": "^11.2.1",
+    "supertest": "^3.0.0"
+  }
+}

@@ -1,5 +1,6 @@
 {
   "name": "boo",
+  "version": "1.0.0",
   "description": "spooky discord bot",
   "repository": "https://github.com/xxami/boo.git",
   "license": "Unlicense",
