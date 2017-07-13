@@ -11,6 +11,11 @@
             <div id="app"></div>
         </section>
     </div>
+	{% autoescape false %}
+	<script>
+		let playerData = {{ playerData }}
+	</script>
+	{% endautoescape %}
     <script src="/dist/build.js"></script>
 </body>
 </html>
