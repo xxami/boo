@@ -16,7 +16,9 @@
     "koa-logger": "^3.0.0",
     "koa-router": "^7.2.1",
     "koa-static": "^3.0.0",
-    "koa-views": "^6.0.2"
+    "koa-views": "^6.0.2",
+    "node-persist": "^2.1.0",
+    "swig": "^1.4.2"
   },
   "devDependencies": {
     "mocha": "^3.4.2",
