@@ -2,10 +2,17 @@
 <template>
 
   <div id="app">
-    <article class="box" v-for="post in posts">
-      <h1>{{ post.title }}</h1>
-      <p>{{ post.body }}</p>
+
+    <article class="box" v-for="(cards, booster, _) in cardCollection">
+      <h1>{{ booster }}</h1>
+      <div v-for="card in cards">
+        <div :class="{'not-found' : playerData.cards[card.id] !== 1}"> 
+          <img :alt="card.text" :src="card.img">
+          <div>#{{ card.id }} - {{ card.text }}</div>
+        </div>
+      </div>
     </article>
+  
   </div>
 
 </template>
@@ -15,13 +22,15 @@
 export default {
   
   name: 'app',
+
+  /*created() {
+    this.cardCollection = cards;
+  },*/
   
   data () {
     return {
-      posts: [
-        {title: 'First post', body: 'Lorem ipsum dolor sit amet'},
-        {title: 'Second post', body: 'Lorem ipsum dolor sit amet'}
-      ]
+      cardCollection: cards,
+      playerData: playerData,
     }
   }
 
@@ -30,5 +39,9 @@ export default {
 </script>
 
 <style>
+
+.not-found {
+  opacity: 0.2;
+}
 
 </style>

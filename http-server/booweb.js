@@ -35,7 +35,7 @@ async function viewCollection(ctx) {
   await ctx.render('collection', {playerData: playerData});
 }
 
-if (!module.parent) app.listen(3000, () => {
+if (!module.parent) app.listen(3001, () => {
   console.log('Server listening at http://localhost:3000/');
 });
 
