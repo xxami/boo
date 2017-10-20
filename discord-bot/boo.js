@@ -29,6 +29,8 @@ client.on('message', message => {
 
 	if (command in BooCommands) {
 		BooCommands[command](message);
+	} else if (command in BooAliases) {
+		BooAliases[command](message);
 	}
 });
 
@@ -210,6 +212,12 @@ class BooCommands {
 		let channel = client.channels.find('name', config.channel);
 		channel.send({embed});
 	}
+
+}
+
+BooAliases = {
+
+	u: BooCommands.unpack
 
 }
 
